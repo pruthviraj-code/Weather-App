@@ -1,6 +1,6 @@
 import Dropdown from "@/components/Dropdown";
 import React from "react";
-import rain from "@/assets/images/icon-rain.webp";
+import rain from "@/assets/icons/icon-rain.webp";
 
 const hourlyData = [
   { time: "3pm", temp: "20°" },

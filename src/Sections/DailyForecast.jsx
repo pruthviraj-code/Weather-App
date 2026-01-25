@@ -1,37 +1,53 @@
 import React from "react";
-import rainy from "@/assets/images/icon-rain.webp";
+import WeatherIcon from "@/components/WeatherIcon";
+import { getWeatherCondition } from "@/helpers/getWeatherCondition";
+import { getDailyFromHourly } from "@/helpers/getDailyFromHourly";
 
-const dailyData = [
-  { day: "Tue", high: "65°", low: "52°" },
-  { day: "Wed", high: "65°", low: "52°" },
-  { day: "Thu", high: "65°", low: "52°" },
-  { day: "Fri", high: "65°", low: "52°" },
-  { day: "Sat", high: "65°", low: "52°" },
-  { day: "Sun", high: "65°", low: "52°" },
-  { day: "Mon", high: "65°", low: "52°" },
-];
+export default function DailyForecast({ hourlyData }) {
+  const dailyData = getDailyFromHourly(hourlyData); // returns array of 7 days
 
-export default function DailyForecast() {
   return (
-    <div className="mt-4 mobile:mt-0">
-      <h3 className="text-sm sm:text-base font-medium mb-3 sm:mb-4">
+    <div className="mobile:mt-0 mt-4">
+      <h3 className="mb-3 text-sm font-medium sm:mb-4 sm:text-base">
         Daily Forecast
       </h3>
-      
-      <div className="grid  grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2">
-        {dailyData.map((item, index) => (
-          <div 
-            key={index}
-            className="bg-Neutral-800 border border-Neutral-300/8 flex w-full flex-col items-center gap-1.5 sm:gap-2 rounded-lg p-2"
-          >
-            <p className="text-xs sm:text-[12px]">{item.day}</p>
-            <img src={rainy} alt="" className="w-10 sm:w-12" />
-            <div className="flex  w-full justify-between ">
-              <p className="text-[12px]  font-light">{item.high}</p>
-              <p className="text-[12px]  font-light text-Neutral-400">{item.low}</p>
+
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7">
+        {dailyData.map((item) => {
+          // compute icon condition for this day
+          const condition = getWeatherCondition({
+            temperature: item.temperature_max,
+            precipitation: item.precipitation_sum,
+            windSpeed: item.wind_max,
+          });
+
+          const weekday = new Date(item.date).toLocaleDateString("en-US", {
+            weekday: "short",
+          });
+
+          return (
+            <div
+              key={item.date}
+              className="bg-Neutral-800 border-Neutral-300/8 flex w-full flex-col items-center gap-1.5 rounded-lg border p-2 sm:gap-2"
+            >
+              <p className="text-xs sm:text-[12px]">{weekday}</p>
+
+              {/* dynamic WeatherIcon */}
+              <WeatherIcon
+                condition={condition} // e.g., "icon-sunny", "icon-rain"
+                alt={condition}
+                className="w-16 sm:w-18"
+              />
+
+              <div className="flex w-full justify-between">
+                <p className="text-[12px] font-light">{Math.round(item.temperature_max)}°</p>
+                <p className="text-Neutral-400 text-[12px] font-light">
+                  {Math.round(item.temperature_min)}°
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

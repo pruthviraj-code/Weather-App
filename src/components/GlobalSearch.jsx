@@ -3,6 +3,13 @@ import search from "@/assets/images/icon-search.svg";
 import Button from "./Button";
 import { searchCities } from "@/services/api";
 
+/* -------------------- HELPER FUNCTION -------------------- */
+function formatCityLabel(city) {
+  if (!city) return "";
+  // Only include values that exist and join with commas
+  return [city.name, city.admin1, city.country].filter(Boolean).join(", ");
+}
+
 export default function GlobalSearch({ onConfirmCity }) {
   const [searchValue, setSearchValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -14,6 +21,7 @@ export default function GlobalSearch({ onConfirmCity }) {
   const skipNextFetchRef = useRef(false);
   const requestIdRef = useRef(0);
 
+  /* -------------------- FETCH SUGGESTIONS -------------------- */
   useEffect(() => {
     if (skipNextFetchRef.current) {
       skipNextFetchRef.current = false;
@@ -59,11 +67,12 @@ export default function GlobalSearch({ onConfirmCity }) {
     setDraftCity(null); // invalidate previous selection
   };
 
-  /* -------------------- SELECT CITY (TEMP ONLY) -------------------- */
+  /* -------------------- SELECT CITY -------------------- */
   const handleSelect = (city) => {
-    skipNextFetchRef.current = true; // 🔑 critical fix
+    if (!city?.name) return; // prevent invalid selection
 
-    setSearchValue(`${city.name}, ${city.country}`);
+    skipNextFetchRef.current = true;
+    setSearchValue(formatCityLabel(city));
     setDraftCity(city);
     setSuggestions([]);
     setIsOpen(false);
@@ -117,10 +126,12 @@ export default function GlobalSearch({ onConfirmCity }) {
                 onClick={() => handleSelect(city)}
                 className="hover:bg-Neutral-700 cursor-pointer px-4 py-2.5 text-white transition-colors first:rounded-t-lg last:rounded-b-lg"
               >
-                <div className="font-medium">{city.name}</div>
+                <div className="font-medium">{city.name || ""}</div>
                 <div className="text-sm text-gray-400">
-                  {city.admin1 && `${city.admin1}, `}
-                  {city.country}
+                  {formatCityLabel(city)
+                    .split(",")
+                    .slice(1) // remove name from display
+                    .join(", ")}
                 </div>
               </div>
             ))}

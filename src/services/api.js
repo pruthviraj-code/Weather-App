@@ -6,7 +6,12 @@ const REVERSE_GEOCODING_API =
 export const getWeatherData = async (latitude = 52.52, longitude = 13.41) => {
   try {
     const response = await fetch(
-      `${WEATHER_API}?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`,
+      `${WEATHER_API}
+?latitude=${latitude}
+&longitude=${longitude}
+&current=temperature_2m,wind_speed_10m,precipitation
+&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation
+`,
     );
 
     const data = await response.json();
@@ -16,8 +21,6 @@ export const getWeatherData = async (latitude = 52.52, longitude = 13.41) => {
     throw error;
   }
 };
-
-
 
 export const getCityName = async (latitude, longitude) => {
   try {
@@ -36,14 +39,12 @@ export const getCityName = async (latitude, longitude) => {
 export const searchCities = async (cityName) => {
   try {
     const response = await fetch(
-      `${GEOCODING_API}?name=${cityName}&count=10&language=en&format=json`
+      `${GEOCODING_API}?name=${cityName}&count=10&language=en&format=json`,
     );
     const data = await response.json();
-    return data.results  || [];
+    return data.results || [];
   } catch (error) {
-    console.error('Error searching cities:', error);
+    console.error("Error searching cities:", error);
     return [];
   }
 };
-
-

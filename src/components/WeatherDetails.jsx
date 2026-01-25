@@ -1,13 +1,37 @@
 import React from "react";
 
-const weatherData = [
-  { label: "Feels like", value: "20°" },
-  { label: "Humidity", value: "46%" },
-  { label: "Wind", value: "14 km/h" },
-  { label: "Precipitation", value: "0 mm" },
-];
-
-export default function WeatherDetails() {
+export default function WeatherDetails({
+  temperature,
+  temperatureUnit,
+  relativeHumidity,
+  relativeHumidityUnit,
+  precipitation,
+  precipitationUnit,
+  windSpeed,
+  windSpeedUnit,
+}) {
+  const weatherData = [
+    {
+      label: "Feels like",
+      value: temperature,
+      unit: temperatureUnit,
+    },
+    {
+      label: "Humidity",
+      value: relativeHumidity,
+      unit: relativeHumidityUnit,
+    },
+    {
+      label: "Wind",
+      value: windSpeed,
+      unit: windSpeedUnit,
+    },
+    {
+      label: "Precipitation",
+      value: precipitation ?? 0,
+      unit: precipitationUnit,
+    },
+  ];
   return (
     <>
       {weatherData.map((item, index) => (
@@ -19,7 +43,8 @@ export default function WeatherDetails() {
             {item.label}
           </p>
           <p className="mobile:pt-0 pt-4 text-lg font-medium sm:text-xl md:text-[20px]">
-            {item.value}
+         {  ` ${item.value} 
+             ${item.unit}`}
           </p>
         </div>
       ))}
