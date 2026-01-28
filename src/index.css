@@ -28,6 +28,8 @@
 @layer base {
 
 
+
+
     body {
         background-color: var(--color-Neutral-900);
         padding-inline: 10px;
@@ -68,13 +70,4 @@
         }
     }
 }
-/* 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px var(--color-Neutral-800) inset !important;
-  box-shadow: 0 0 0 1000px var(--color-Neutral-800) inset !important;
-  -webkit-text-fill-color: var(--color-Neutral-0) !important;
-  color: var(--color-Neutral-0) !important;
-  caret-color: white !important} */
+

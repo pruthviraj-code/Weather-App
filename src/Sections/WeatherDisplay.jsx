@@ -7,7 +7,6 @@ import { getWeatherCondition } from "@/helpers/getWeatherCondition";
 
 
 export default function WeatherDisplay({ weatherData, cityData }) {
-  console.log(weatherData);
   
   // ---- CURRENT WEATHER ----
   const currentWeather = {
@@ -89,7 +88,7 @@ export default function WeatherDisplay({ weatherData, cityData }) {
       </div>
 
       <div className="col-span-1 lg:col-start-2 lg:row-span-2 lg:row-start-1">
-        <HourlyForecast />
+        <HourlyForecast  hourlyData={hourlyData}/>
       </div>
     </>
   );
