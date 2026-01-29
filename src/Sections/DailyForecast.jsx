@@ -2,9 +2,11 @@ import React from "react";
 import WeatherIcon from "@/components/WeatherIcon";
 import { getWeatherCondition } from "@/helpers/getWeatherCondition";
 import { getDailyFromHourly } from "@/helpers/getDailyFromHourly";
+import { useUnits } from "@/context/UnitsContext";
 
 export default function DailyForecast({ hourlyData }) {
-  const dailyData = getDailyFromHourly(hourlyData); // returns array of 7 days
+  const { convertTemperature } = useUnits();
+  const dailyData = getDailyFromHourly(hourlyData);
 
   return (
     <div className="mobile:mt-0 mt-4">
@@ -14,7 +16,6 @@ export default function DailyForecast({ hourlyData }) {
 
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7">
         {dailyData.map((item) => {
-          // compute icon condition for this day
           const condition = getWeatherCondition({
             temperature: item.temperature_max,
             precipitation: item.precipitation_sum,
@@ -25,6 +26,9 @@ export default function DailyForecast({ hourlyData }) {
             weekday: "short",
           });
 
+          const tempMax = convertTemperature(item.temperature_max);
+          const tempMin = convertTemperature(item.temperature_min);
+
           return (
             <div
               key={item.date}
@@ -32,17 +36,16 @@ export default function DailyForecast({ hourlyData }) {
             >
               <p className="text-xs sm:text-[12px]">{weekday}</p>
 
-              {/* dynamic WeatherIcon */}
               <WeatherIcon
-                condition={condition} // e.g., "icon-sunny", "icon-rain"
+                condition={condition}
                 alt={condition}
                 className="w-16 sm:w-18"
               />
 
               <div className="flex w-full justify-between">
-                <p className="text-[12px] font-light">{Math.round(item.temperature_max)}°</p>
+                <p className="text-[12px] font-light">{tempMax}°</p>
                 <p className="text-Neutral-400 text-[12px] font-light">
-                  {Math.round(item.temperature_min)}°
+                  {tempMin}°
                 </p>
               </div>
             </div>

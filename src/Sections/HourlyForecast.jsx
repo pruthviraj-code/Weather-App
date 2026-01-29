@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import Dropdown from "@/components/Dropdown";
 import WeatherIcon from "@/components/WeatherIcon";
 import { getWeatherCondition } from "@/helpers/getWeatherCondition";
+import { useUnits } from "@/context/UnitsContext";
 
 const days = [
   "Sunday",
@@ -14,7 +15,8 @@ const days = [
 ];
 
 export default function HourlyForecast({ hourlyData }) {
-  // group hourly data by day
+  const { convertTemperature } = useUnits();
+
   const groupedByDay = useMemo(() => {
     if (!hourlyData?.time) return {};
 
@@ -44,7 +46,6 @@ export default function HourlyForecast({ hourlyData }) {
 
   return (
     <div className="">
-      {/* HEADER */}
       <div className="bg-Neutral-800 mobile:pt-3 relative z-10 flex w-full items-center justify-between rounded-t-md px-3 pt-3 sm:px-4">
         <h3 className="text-sm font-medium sm:text-base">Hourly forecast</h3>
 
@@ -61,7 +62,6 @@ export default function HourlyForecast({ hourlyData }) {
         </Dropdown>
       </div>
 
-      {/* LIST */}
       <div
         tabIndex={-1}
         className="bg-Neutral-800 mobile:mt-0 scrollbar-custom mobile:max-h-127.5 max-h-135 overflow-y-auto rounded-b-lg xl:max-h-142.5"
@@ -77,6 +77,8 @@ export default function HourlyForecast({ hourlyData }) {
               precipitation: item.precipitation,
               windSpeed: item.windSpeed,
             });
+
+            const displayTemp = convertTemperature(item.temperature);
 
             return (
               <div
@@ -94,7 +96,7 @@ export default function HourlyForecast({ hourlyData }) {
                 </div>
 
                 <p className="text-[18px] font-medium sm:text-[12px]">
-                  {Math.round(item.temperature)}°
+                  {displayTemp}°
                 </p>
               </div>
             );

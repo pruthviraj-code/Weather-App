@@ -1,4 +1,5 @@
 import React from "react";
+import { useUnits } from "@/context/UnitsContext";
 
 export default function WeatherDetails({
   temperature,
@@ -10,11 +11,20 @@ export default function WeatherDetails({
   windSpeed,
   windSpeedUnit,
 }) {
+  const {
+    convertTemperature,
+    convertWindSpeed,
+    convertPrecipitation,
+    temperatureUnit: userTempUnit,
+    windSpeedUnit: userWindUnit,
+    precipitationUnit: userPrecipUnit,
+  } = useUnits();
+
   const weatherData = [
     {
       label: "Feels like",
-      value: temperature,
-      unit: temperatureUnit,
+      value: convertTemperature(temperature),
+      unit: userTempUnit === "celsius" ? "°C" : "°F",
     },
     {
       label: "Humidity",
@@ -23,15 +33,16 @@ export default function WeatherDetails({
     },
     {
       label: "Wind",
-      value: windSpeed,
-      unit: windSpeedUnit,
+      value: convertWindSpeed(windSpeed),
+      unit: userWindUnit,
     },
     {
       label: "Precipitation",
-      value: precipitation ?? 0,
-      unit: precipitationUnit,
+      value: convertPrecipitation(precipitation ?? 0),
+      unit: userPrecipUnit,
     },
   ];
+
   return (
     <>
       {weatherData.map((item, index) => (
@@ -43,8 +54,7 @@ export default function WeatherDetails({
             {item.label}
           </p>
           <p className="mobile:pt-0 pt-4 text-lg font-medium sm:text-xl md:text-[20px]">
-         {  ` ${item.value} 
-             ${item.unit}`}
+            {`${item.value} ${item.unit}`}
           </p>
         </div>
       ))}
